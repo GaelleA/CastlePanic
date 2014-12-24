@@ -1,0 +1,162 @@
+#!/usr/bin/env python
+"""
+Forest     | G(1), O(2)
+Archer     |
+Knight     |
+Swordsman  | T(3)
+Castle     |
+"""
+import random
+#global variables
+hand = []
+
+
+#initialises the list of monsters
+class goblin :
+	health = 1	
+	def __repr__(self):
+		return 'goblin(%d)'%self.health
+class orc :
+	health = 2
+	def __repr__(self):
+		return 'orc(%d)'%self.health
+class troll :
+	health = 3
+	def __repr__(self):
+		return 'troll(%d)'%self.health
+monster = [goblin, orc, troll]
+
+#initialises the deck
+class deck:
+	remaining=10
+	def draw(self):
+		if self.remaining<=0:
+			print "Lucky you, no monster left :)"
+			return []
+		else:
+			self.remaining -=1
+			print "You have %d remaining monsters..."%self.remaining
+			return [random.choice(monster)()]
+		#return random.choice((archer, knight, swordsman))
+deck = deck()
+
+#initialises the locations for the monsters
+class forest :
+	monsters = []
+class archer:
+	monsters = []
+class knight:
+	monsters = []
+class swordsman:
+	monsters = []
+class castle:
+	monsters = []
+area = [forest, archer, knight, swordsman, castle]
+
+#shows the board with the list of monsters and areas
+def show_board():
+	print """
+Forest     | %s
+Archer     | %s
+Knight     | %s
+Swordsman  | %s
+Castle     | %s
+""" % (forest.monsters, archer.monsters, knight.monsters, swordsman.monsters, castle.monsters)
+
+#show player's hand
+def show_hand():
+	for i in range(len(hand)):
+		print i, hand[i].__name__
+		
+
+#runs once per game, initialises the cards and the monsters on the board
+def initialize():
+	global hand
+	for i in range(5):
+		hand += [random.choice((archer, knight, swordsman))]
+	for i in range(1):
+		archer.monsters +=[random.choice(monster)()]
+	show_board()
+	print "This is your hand"
+	show_hand()
+
+#initialize()
+
+
+def draw():
+	while len(hand)<5:
+		global hand
+		hand += [random.choice((archer, knight, swordsman))]
+	print "This is your hand:"
+	show_hand() 
+
+
+def discard():
+	global hand
+	print "This is your hand"
+	show_hand()
+	if raw_input("Do you want to discard y/n?") =='y':
+		discard = raw_input("What do you want to discard my Sweetie?")
+		hand[int(discard)]=random.choice((archer, knight, swordsman))
+	print "Here is your new hand:"
+	show_hand()	
+
+#trade
+
+
+def play():
+	global hand
+	print "Here is your current hand"
+	show_hand()
+	show_board()
+	while raw_input("Do you have a card to play y/n?") == 'y':
+		show_board()
+		card_played = raw_input("What card do you want to play?")
+		try:
+			card  = hand.pop(int(card_played))
+		except Exception as e:
+			print "You suck - %r is not good: %s" % (card_played, e)
+			continue
+		for i in range(len(card.monsters)):
+			print i, card.monsters[i]
+		monster_to_hit = raw_input("What monster do you want to attack?")
+		card.monsters[int(monster_to_hit)].health -=1
+		print("Monster got hit! ")
+		if card.monsters[int(monster_to_hit)].health == 0:
+			card.monsters.pop(int(monster_to_hit))
+			print "Monster died!!"
+		print "Now here are what the board and your hand look like"
+		show_board() 
+		show_hand()
+	print "This is the board at the end of your turn"
+	show_board()
+
+def monsters_arise():
+#all monsters move
+	for i in reversed(range(len(area)-1)):
+		area[i+1].monsters = area[i].monsters	
+	forest.monsters = []
+	if castle.monsters != []:
+		print "You are doomed!!!!AARFGG URFHHFHWXVSXZZZZ"
+#draws 2 new monsters
+	for i in range(2):
+		forest.monsters +=deck.draw()
+	print "Here is the new board after the monsters arrived"
+	show_board()
+
+def main():
+	initialize()
+	while castle.monsters==[]:
+		draw()
+		discard()
+		play()
+		monsters_arise()
+		if castle.monsters !=[]:
+			print "THE END."
+			break
+		elif deck.remaining == 0 and forest.monsters ==[] and archer.monsters == [] and knight.monsters ==[] and swordsman.monsters == [] and castle.monsters ==[] :
+			print "OMG!! YOU TOTALLY WON!!!!"
+			break
+ 
+
+main()
