@@ -6,8 +6,12 @@ Knight     |
 Swordsman  | T(3)
 Castle     |
 """
+
+# to import
 import random
-#global variables
+
+
+#declare global variables
 hand = []
 
 
@@ -29,6 +33,7 @@ monster = [goblin, orc, troll]
 #initialises the deck
 class deck:
 	remaining=10
+	# prints count monsters left and returns the random monster from deck
 	def draw(self):
 		if self.remaining<=0:
 			print "Lucky you, no monster left :)"
@@ -38,6 +43,8 @@ class deck:
 			print "You have %d remaining monsters..."%self.remaining
 			return [random.choice(monster)()]
 		#return random.choice((archer, knight, swordsman))
+		
+#creates a deck
 deck = deck()
 
 #initialises the locations for the monsters
@@ -63,7 +70,7 @@ Swordsman  | %s
 Castle     | %s
 """ % (forest.monsters, archer.monsters, knight.monsters, swordsman.monsters, castle.monsters)
 
-#show player's hand
+#shows player's hand
 def show_hand():
 	for i in range(len(hand)):
 		print i, hand[i].__name__
