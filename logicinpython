@@ -12,7 +12,7 @@ import random
 
 
 #declare global variables
-hand = []
+global hand = []
 
 
 #initialises the list of monsters
